@@ -9,13 +9,8 @@ import torch
 import warnings
 from transformers import AlbertModel, AlbertTokenizer
 
-# Suppress annoying warnings for professional output
 warnings.filterwarnings('ignore')
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  
-
-# ==========================================
-# 1. FEATURE EXTRACTION FUNCTIONS
-# ==========================================
 
 # 1.1 CTDD Feature Extraction
 def Count1(aaSet, sequence):
@@ -81,7 +76,7 @@ def CTDD(fastas):
     return features
 
 
-# 1.2 KSCTriad Feature Extraction (Standard iFeature Implementation, kspace=3)
+# 1.2 KSCTriad Feature Extraction
 def KSCTriad(fastas, max_gap=3):
     AAGroup = {
         'g1': 'AGV', 'g2': 'ILFP', 'g3': 'YMTS',
@@ -98,7 +93,7 @@ def KSCTriad(fastas, max_gap=3):
     features = {}
     for name, sequence in fastas:
         full_code = []
-        for gap in range(max_gap + 1): # Gaps 0, 1, 2, 3
+        for gap in range(max_gap + 1):
             myDict = {f: 0 for f in features_list}
             
             for i in range(len(sequence)):
@@ -128,11 +123,9 @@ def KSCTriad(fastas, max_gap=3):
 def PTAB(fastas, model_name="Rostlab/prot_albert"):
     print(f"Loading PTAB Model ({model_name})...")
     
-    # Automatically detect GPU, otherwise fallback to CPU
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(f"Using device: {device.type.upper()} for PTAB embeddings")
     
-    # This automatically downloads the correct tokenizer and weights from HuggingFace
     tokenizer = AlbertTokenizer.from_pretrained(model_name, do_lower_case=False)
     model = AlbertModel.from_pretrained(model_name)
     model = model.to(device)
@@ -140,19 +133,14 @@ def PTAB(fastas, model_name="Rostlab/prot_albert"):
     
     features = {}
     for name, sequence in fastas:
-        # ProtTrans expects spaces between amino acids and replaces rare AAs with X
         seq_spaced = " ".join(list(re.sub(r"[UZOB]", "X", sequence)))
         inputs = tokenizer(seq_spaced, return_tensors='pt')
         
-        # Move inputs to the selected device (GPU or CPU)
         inputs = {k: v.to(device) for k, v in inputs.items()}
         
         with torch.no_grad():
             outputs = model(**inputs)
-            # Remove CLS and SEP tokens
             hidden_states = outputs.last_hidden_state[0, 1:-1]
-            # Mean pooling over the sequence length to get 1D embedding
-            # Move back to CPU before converting to numpy
             embedding = torch.mean(hidden_states, dim=0).cpu().numpy()
             
         features[name] = np.array(embedding, dtype=np.float32)
@@ -180,7 +168,6 @@ def read_fasta(file_path):
     return fastas
 
 def load_pkl_model(filepath):
-    # Apply joblib randomstate patch just in case (from your original snippet)
     import numpy as np
     def _randomstate_ctor_workaround(*args):
         return np.random.RandomState()
@@ -190,7 +177,7 @@ def load_pkl_model(filepath):
     return joblib.load(filepath)
 
 def main():
-    parser = argparse.ArgumentParser(description="StackHPpred: Meta-predictor for Halophilic Proteins")
+    parser = argparse.ArgumentParser(description="StackHPpred: A stacking-based ensemble learning framework for the identification of peptide hormones using multi-view feature representations")
     parser.add_argument("-i", "--input", required=True, help="Input FASTA file")
     parser.add_argument("-o", "--output", required=True, help="Output CSV file")
     args = parser.parse_args()
@@ -241,7 +228,6 @@ def main():
             probs = model.predict_proba(X_pred)[:, 1]
             meta_features.append(probs)
             
-    # Transpose so each row is a sequence, and each column is a feature probability (N x 30)
     X_meta = np.array(meta_features).T 
     
     # 3. Final Meta-Model Prediction
@@ -261,7 +247,7 @@ def main():
         
     df_res = pd.DataFrame(results)
     df_res.to_csv(args.output, index=False)
-    print(f"\n✅ Predictions successfully saved to {args.output}")
+    print(f"\nPredictions successfully saved to {args.output}")
 
 if __name__ == '__main__':
     main()
