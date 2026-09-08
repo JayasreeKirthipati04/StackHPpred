@@ -2,8 +2,8 @@
 
 > **A stacking-based ensemble learning framework for the identification of peptide hormones using multi-view feature representations**
 
-StackHPpred identifies hormone peptides from protein sequences using a two-layer
-stacking ensemble. The framework combines sequence-derived physicochemical and
+StackHPpred classifies peptide sequences as hormone peptides or non-hormone
+peptides using a two-layer stacking ensemble. The framework combines sequence-derived physicochemical and
 composition descriptors (CTDD, KSCTriad) with contextual embeddings from a
 pretrained protein language model (ProtTrans ALBERT BFD). Probabilities from 30
 first-layer models are combined by a meta-classifier, so that composition-based
@@ -31,7 +31,7 @@ We highly recommend using `conda` to create an isolated environment for running 
 
 1. Clone this repository (or download the source code):
    ```bash
-   git clone https://github.com/yourusername/StackHPpred.git
+   git clone https://github.com/JayasreeKirthipati04/StackHPpred.git
    cd StackHPpred
    ```
 
@@ -54,6 +54,12 @@ We highly recommend using `conda` to create an isolated environment for running 
 ## 🚀 Usage
 
 StackHPpred is designed to be easily run from the command line.
+
+> **⚠️ Hardware Note:** Generating the PTAB embeddings is the most
+> computationally expensive step. The script uses a GPU automatically if one is
+> available and falls back to CPU otherwise. On CPU, runtime scales linearly
+> with the number of input sequences, so large FASTA files may take
+> considerably longer.
 
 ### Command Line Interface
 
@@ -86,3 +92,7 @@ The output `.csv` file will contain three columns:
 1. `Sequence_Name`: The identifier from your FASTA header.
 2. `Probability`: The computed probability score (0.0 to 1.0).
 3. `Prediction`: The binary classification (`HP` for Hormone Peptide, `non-HP` for non-Hormone Peptide).
+
+## 📖 Citation
+If you find StackHPpred useful in your research, please cite our paper:
+> *[Jayasree Kirthipati], "StackHPpred: A stacking-based ensemble learning framework for the identification of peptide hormones using multi-view feature representations", [Journal Name], 202X.*
