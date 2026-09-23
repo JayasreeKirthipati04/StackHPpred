@@ -10,6 +10,23 @@ first-layer models are combined by a meta-classifier, so that composition-based
 and contextual representations contribute complementary information to the
 final prediction.
 
+## 📄 Preprint
+
+Our preprint is available on **bioRxiv**:
+
+**Kirthipati, J., Chemarthi Ravi, M. K., & Kirthipati, M. (2026).**  
+**StackHPpred: A Stacking-based Ensemble Learning Framework for the Identification of Peptide Hormones Using Multi-view Feature Representations.** *bioRxiv*.  
+**DOI:** https://doi.org/10.64898/2026.09.16.751134  
+**Preprint link:** https://www.biorxiv.org/content/10.64898/2026.09.16.751134v1
+
+## 🏗️ Architecture Overview
+
+The overall workflow and architecture of StackHPpred are shown below:
+
+![StackHPpred architecture](Figures/Figure1.png)
+
+**Figure 1.** Overview of the StackHPpred framework. Peptide sequences are represented using three complementary feature types: CTDD, KSCTriad, and PTAB (ProtTrans ALBERT BFD embeddings). Ten classifiers are trained on each feature representation in the first layer, generating 30 probability-based meta-features, which are then used by a second-layer meta-classifier to produce the final prediction.
+
 ## 🧬 Key Features
 - **Multi-view Feature Extraction:**
   - **CTDD:** Composition, Transition, and Distribution of physicochemical properties.
