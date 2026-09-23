@@ -14,8 +14,8 @@ final prediction.
 
 Our preprint is available on **bioRxiv**:
 
-**Kirthipati, J., Chemarthi Ravi, M. K., & Kirthipati, M. (2026).**  
-**StackHPpred: A Stacking-based Ensemble Learning Framework for the Identification of Peptide Hormones Using Multi-view Feature Representations.** *bioRxiv*.  
+**StackHPpred: A Stacking-based Ensemble Learning Framework for the Identification of Peptide Hormones Using Multi-view Feature Representations.** *bioRxiv*.
+**Kirthipati, J., Chemarthi Ravi, M. K., & Kirthipati, M. (2026).**    
 **DOI:** https://doi.org/10.64898/2026.09.16.751134  
 **Preprint link:** https://www.biorxiv.org/content/10.64898/2026.09.16.751134v1
 
@@ -25,7 +25,14 @@ The overall workflow and architecture of StackHPpred are shown below:
 
 ![StackHPpred architecture](Figures/Figure1.png)
 
-**Figure 1.** Overview of the StackHPpred framework. Peptide sequences are represented using three complementary feature types: CTDD, KSCTriad, and PTAB (ProtTrans ALBERT BFD embeddings). Ten classifiers are trained on each feature representation in the first layer, generating 30 probability-based meta-features, which are then used by a second-layer meta-classifier to produce the final prediction.
+**Figure 1.** Schematic overview of the StackHPpred development workflow, comprising (i)
+dataset collection, (ii) sequence pre-processing, redundancy reduction, and benchmark
+dataset construction, (iii) development of baseline models using 21 PLM/NLP-based
+embeddings, 35 conventional descriptors, and 10 machine-learning classifiers, (iv)
+correlation-based selection of 14 complementary feature representations, (v)
+development of StackHPpred through feature- and classifier-level stacking, optimal
+model selection, and model interpretation, and (vi) web server development for
+classification of HPs and non-HPs.
 
 ## 🧬 Key Features
 - **Multi-view Feature Extraction:**
@@ -111,5 +118,10 @@ The output `.csv` file will contain three columns:
 3. `Prediction`: The binary classification (`HP` for Hormone Peptide, `non-HP` for non-Hormone Peptide).
 
 ## 📖 Citation
-If you find StackHPpred useful in your research, please cite our paper:
-> *[Jayasree Kirthipati], "StackHPpred: A stacking-based ensemble learning framework for the identification of peptide hormones using multi-view feature representations", [Journal Name], 202X.*
+
+If you find StackHPpred useful in your research, please cite our preprint:
+
+> **Kirthipati, J., Chemarthi Ravi, M. K., & Kirthipati, M. (2026).**  
+> **StackHPpred: A Stacking-based Ensemble Learning Framework for the Identification of Peptide Hormones Using Multi-view Feature Representations.**  
+> *bioRxiv*.  
+> https://doi.org/10.64898/2026.09.16.751134
